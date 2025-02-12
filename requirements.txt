@@ -1,0 +1,6 @@
+gradio
+torch
+numpy
+transformers
+kokoro>=0.3.4
+soundfile

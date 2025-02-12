@@ -1,0 +1,5 @@
+sdk: gradio
+python_version: 3.9
+dependencies:
+  - apt-get install -y espeak-ng # linux environment
+  - pip install kokoro>=0.3.4 soundfile
