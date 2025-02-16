@@ -2,8 +2,8 @@ import torch
 import gradio as gr
 from transformers import pipeline
 from kokoro import KPipeline
-from tool_models import llm_deepseek, captioning_sf, tts_kokoro
-from config import ENABLE_LOGGING
+from .tool_models import llm_deepseek, captioning_sf, tts_kokoro, llm_gpt
+from .config import ENABLE_LOGGING
 
 
 def process_image_caption(image):
@@ -30,24 +30,32 @@ def process_text_generation(text, max_words):
         }
     ]
     response = llm_deepseek(messages, max_token)
+    
+    # msg_user_content = f"""You are a very professional and creative story-telling assistant.
+    #     Please generate a story based on this sentence "{text}".
+    #     The story must be strictly more than {checkpoint_ending} words, and below {max_words}.
+    #     Once the story has reached the minimum requirements of {checkpoint_ending} words, you can start to end the story in next few sentences."""
+    # response = llm_gpt(msg_user_content, max_token)
+    
     return response
 
 def full_pipeline(image, max_word):
 
+    runing_message = "🚀 Running on GPU: Expect fast responses!" if torch.cuda.is_available() else "⚠️ Running on CPU: This may take few minutes due to large model size."
+    
     # image captioning
-    yield gr.update(value="🚀 Step 1: Generating Image Caption..."), None, None, None
+    yield gr.update(value=f"🚀 Step 1: Generating Image Caption...\n\n{runing_message}"), None, None, None
     caption = process_image_caption(image)
 
     # story generation
-    yield gr.update(value="🚀 Step 2: Generating Story..."), caption, None, None
+    yield gr.update(value=f"🚀 Step 2: Generating Story...\n\n{runing_message}"), caption, None, None
     story = process_text_generation(caption, max_word)
 
     # text to audio
-    yield gr.update(value="🚀 Step 3: Generating Speech..."), caption, story, None
+    yield gr.update(value=f"🚀 Step 3: Generating Speech...\n\n{runing_message}"), caption, story, None
     speech = process_tts(story)
 
     yield gr.update(value="✅ All steps completed!"), caption, story, speech
-
 
 
 def main():
@@ -57,8 +65,9 @@ def main():
 
     # preload all pipeline models when start
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    pipeline("image-to-text", model="Salesforce/blip-image-captioning-large", device=device)
+    pipeline("image-to-text", model="Salesforce/blip-image-captioning-large", device=device, use_fast=True)
     pipeline("text-generation", model="deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B", batch_size=8, device=device)
+    # pipeline('text-generation', model='openai-community/gpt2-medium', device=device)
     KPipeline(lang_code='a')
     
     # init db for logging
@@ -68,8 +77,8 @@ def main():
 
     # build gradio UI
     with gr.Blocks() as demo:
-        gr.Markdown("## AI Story Teller 🤖")
-
+        gr.Markdown("## Image Story Teller 🤖")
+        
         with gr.Row():
             img_input = gr.Image(type="pil", label="Upload an Image")
             max_word = gr.Slider(minimum=50, maximum=300, step=1, value=100, label="Word Count")
@@ -92,6 +101,6 @@ def main():
             outputs=[status_box, img_output, text_output, tts_output]
         )
 
-    demo.launch()
+    demo.launch(share=True)
 
 

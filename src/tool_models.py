@@ -7,8 +7,8 @@ from kokoro import KPipeline
 import soundfile as sf
 import numpy as np
 import time
-from config import ENABLE_LOGGING
-import utils
+from .config import ENABLE_LOGGING
+from .utils import word_count
 
 
 def tts_kokoro(text, download=0, output_format='wav'):
@@ -61,7 +61,7 @@ def llm_deepseek(messages, max_output_words=200):
         
     if ENABLE_LOGGING:
         from logger import log_chat
-        log_chat(question, response, thinking, max_output_words, utils.word_count(response))
+        log_chat(question, response, thinking, max_output_words, word_count(response))
         
     return response
 
@@ -111,6 +111,9 @@ def captioning_sf(image_source):
 
 def llm_gpt(msg, max_output_words=200):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    generator = pipeline('text-generation', model='gpt2-xl', device=device)
-    response = generator(msg, max_new_tokens=max_output_words)
-    print(response[0]['generated_text'])
+    generator = pipeline('text-generation', model='openai-community/gpt2-medium', device=device)
+    response = generator(msg, max_new_tokens=max_output_words, return_full_text=False)
+    answer = response[0]['generated_text']
+    # print(answer)
+    return answer
+
