@@ -41,8 +41,8 @@ To run this project locally, follow these steps:
 
 ### **1️⃣ Clone the Repository**
 ```bash
-git clone https://github.com/DaisioSK/image-story-teller.git
-cd image-story-teller
+git clone https://github.com/DaisioSK/Image-Story-Teller.git
+cd Image-Story-Teller
 ```
 
 ### **2️⃣ Install Dependencies**
@@ -58,16 +58,6 @@ Once started, visit **`http://127.0.0.1:7860/`** in your browser to interact wit
 
 ---
 
-## 🌐 **Deployment**
-### **Hugging Face Spaces**
-1. Log in to Hugging Face and create a new Space.
-2. Upload the following files:
-   - `app.py`
-   - `requirements.txt`
-   - `space.yml`
-3. Access the generated **URL** to use the app 🎉
-
----
 
 ## 📜 **License**
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
