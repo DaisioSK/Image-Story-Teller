@@ -33,7 +33,8 @@ Finally, the generated story is converted into high-quality speech, allowing use
 - ✅ **AI Story Generation**: Expands your story based on the given image using DeepSeek.
 - ✅ **User-Friendly Interface**: Built with Gradio, making it easy to use.
 - ✅ **Deployed on Hugging Face**: No need for local installation, simply access online.
-
+- ✅ **Store Conversations Locally**: modify config.py to enable conversation logging.
+  
 ---
 
 ## 📥 **Installation & Usage**
