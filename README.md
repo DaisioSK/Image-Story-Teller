@@ -1,5 +1,5 @@
 # **Image Story Teller 🤖**
-📖 This is an multimodal AI application for story generation, allowing you to generate a vivid story audio from a picture seamlessly!
+📖 This is a multimodal AI application for story generation, allowing you to generate a vivid story audio from a picture seamlessly!
 
 ![Hugging Face Spaces](https://img.shields.io/badge/Deployed-Hugging%20Face-blue)  
 ![Python](https://img.shields.io/badge/Python-3.9-blue.svg)
